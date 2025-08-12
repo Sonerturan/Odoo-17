@@ -12,7 +12,8 @@ Hospital Managament System Development
     'category': 'Human Resources',
     'website': 'https://www.odoo.com/app/invoicing',
     'depends': [
-        'mail'
+        'mail',
+        'product'
     ],
     'data': [
         "security/ir.model.access.csv",
@@ -21,6 +22,7 @@ Hospital Managament System Development
         "views/patient_tag_views.xml",
         "views/patient_readonly_views.xml",
         "views/appointment_views.xml",
+        "views/appointment_lines_views.xml",
         "views/menu.xml"
     ],
     'demo': [
