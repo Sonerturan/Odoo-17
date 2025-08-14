@@ -16,6 +16,8 @@ class HospitalAppointment(models.Model):
         string="Status", default='draft', required=True, tracking=True,
     )
     appointment_line_ids = fields.One2many('hospital.appointment.line', 'appointment_id', string="Lines")
+    total_qty = fields.Float(compute='_compute_total_quantity', string="Total Quantity", store=True)
+
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -23,6 +25,18 @@ class HospitalAppointment(models.Model):
             if not vals.get('reference') or vals['reference'] == 'New':
                 vals['reference'] = self.env['ir.sequence'].next_by_code('hospital.appointment')
         return super().create(vals_list)
+
+    @api.depends('appointment_line_ids', 'appointment_line_ids.qty')
+    def _compute_total_quantity(self):
+        for rec in self:
+            rec.total_qty = sum(rec.appointment_line_ids.mapped('qty'))
+            """ 2nd way
+            total_qty = 0
+            for line in rec.appointment_line_ids:
+                total_qty += line.qty
+            rec.total_qty = total_qty
+            """
+
 
     # Name get Function (Compute Display Name Function)
     def _compute_display_name(self):
@@ -60,7 +74,7 @@ class HospitalAppointmentLine(models.Model):
     _name = 'hospital.appointment.line'
     _description = 'Hospital Appointment Line'
 
-    appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
+    appointment_id = fields.Many2one('hospital.appointment', string="Appointment", required=True)
     product_id = fields.Many2one('product.product', string="Product")
     qty = fields.Float(string="Quantity")
 
