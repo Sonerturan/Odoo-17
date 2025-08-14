@@ -24,6 +24,16 @@ class HospitalAppointment(models.Model):
                 vals['reference'] = self.env['ir.sequence'].next_by_code('hospital.appointment')
         return super().create(vals_list)
 
+    # Name get Function (Compute Display Name Function)
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f"[{rec.reference}] {rec.patient_id.name}"
+
+    """ Odoo 15 Example
+    def name_get(self):
+        return [(rec.id, f"[{rec.reference}] {rec.patient_id.name or ''}") for rec in self]
+    """
+
     def action_confirm(self):
         for rec in self:
             rec.state = 'confirmed'
