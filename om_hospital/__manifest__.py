@@ -16,6 +16,8 @@ Hospital Managament System Development
         'product'
     ],
     'data': [
+        "security/rule.xml",
+        "security/security.xml",
         "security/ir.model.access.csv",
         "data/sequence.xml",
         "views/patient_views.xml",

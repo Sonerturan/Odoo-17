@@ -9,6 +9,7 @@
             <tree string="Appointment">
                 <field name="reference"/>
                 <field name="patient_id"/>
+                <field name="create_uid" groups="om_hospital.group_hospital_doctors"/>
                 <field name="date_appointment" optional="show"/>
                 <field name="note" optional="hide"/>
             </tree>
@@ -43,6 +44,7 @@
                         <group>
                             <field name="note"/>
                             <field name="total_qty"/>
+                            <field name="create_uid" groups="om_hospital.group_hospital_doctors"/>
                         </group>
                     </group>
                     <notebook>

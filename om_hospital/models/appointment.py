@@ -24,7 +24,7 @@ class HospitalAppointment(models.Model):
     )
     appointment_line_ids = fields.One2many('hospital.appointment.line', 'appointment_id', string="Lines")
     total_qty = fields.Float(compute='_compute_total_quantity', string="Total Quantity", store=True)
-    date_of_birth = fields.Date(string="DOB", related='patient_id.date_of_birth', store=True)
+    date_of_birth = fields.Date(string="DOB", related='patient_id.date_of_birth', store=True, groups="om_hospital.group_hospital_doctors")
 
     # Form'daki Save (Create) Butonunu Inherit Alma
     # buradaki vals_list form' a create anında gönderilen verileri içerir.
