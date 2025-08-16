@@ -8,7 +8,10 @@ class HospitalAppointment(models.Model):
     _rec_name = 'patient_id'
 
     reference = fields.Char(string="Reference", default='New')
-    patient_id = fields.Many2one('hospital.patient', string="Patient")
+    # ondelete='restrict' --> patient deki bağlı olduğu ilgili kaydın silinmesine izin vermez hata verir (çünkü bu kayıt ona bağlı)
+    # ondelete='cascade' --> patient deki kayıt silindiğinde appointment daki ilgili kayıtları siler. Tam tersini de yapabilir.
+    # ondelete='set null' --> patient deki kayıt silindiğinde appointment daki ilgili kayıtları null yapar. (required=False olmalı çünkü null atayacak)
+    patient_id = fields.Many2one('hospital.patient', string="Patient", required=False, ondelete='set null')
     date_appointment = fields.Date(string="Date")
     note = fields.Text(string="Note")
     state = fields.Selection(
