@@ -18,7 +18,16 @@ class HospitalPatient(models.Model):
     #tag_ids = fields.Many2many('patient.tag', string='Tags')
 
     # Silme işlemini inherit alma
-    # def unlink: Model Bazlı silme kuralı / @api.ondelete de kullanılabilir: ilişkisel kayıt kontrolü (One2many, Many2one)
+    # @api.ondelete: ilişkisel kayıt kontrolü (One2many, Many2one) / def unlink de kullanılabilir: Model Bazlı silme kuralı
+    @api.ondelete(at_uninstall=False) # at_uninstall=False: Model kaldırılırken uygulanmaz
+    def _check_patient_appointments(self):
+        for rec in self:
+            domain = [('patient_id', '=', rec.id)]
+            appointments = self.env['hospital.appointment'].search(domain)
+            if appointments:
+                raise ValidationError(
+                    _("You cannot delete the patient now.\nAppointment existing for this patient: %s" % rec.name))
+    """
     def unlink(self):
         for rec in self:
             domain = [('patient_id', '=', rec.id)]
@@ -26,3 +35,5 @@ class HospitalPatient(models.Model):
             if appointments:
                 raise ValidationError(_("You cannot delete the patient now.\nAppointment existing for this patient: %s"% rec.name))
         return super().unlink() # Yeni Odoo sürümüyle gelen kısaltma özelliği -> eski hali: return super(HospitalPatient, self).unlink()
+    """
+
