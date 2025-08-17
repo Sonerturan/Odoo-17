@@ -16,6 +16,9 @@ class HospitalPatient(models.Model):
     )
     tag_ids = fields.Many2many('patient.tag', 'patient_tag_rel', 'patient_id', 'tag_id', string='Tags')
     #tag_ids = fields.Many2many('patient.tag', string='Tags')
+    is_minor = fields.Boolean(string="Minor")
+    guardian = fields.Char(string="Guardian") # readonly=True
+    weight = fields.Float(string="Weight")
 
     # Silme işlemini inherit alma
     # @api.ondelete: ilişkisel kayıt kontrolü (One2many, Many2one) / def unlink de kullanılabilir: Model Bazlı silme kuralı
