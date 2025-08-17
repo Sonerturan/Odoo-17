@@ -13,7 +13,8 @@ Hospital Managament System Development
     'website': 'https://www.odoo.com/app/invoicing',
     'depends': [
         'mail',
-        'product'
+        'product',
+        'account'
     ],
     'data': [
         "security/rule.xml",
