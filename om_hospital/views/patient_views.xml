@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <tree string="Patients">
                 <field name="name"/>
+                <field name="description"/>
                 <field name="date_of_birth" optional="show"/>
                 <field name="gender" optional="hide"/>
             </tree>
@@ -23,6 +24,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="description"/>
                             <field name="date_of_birth"/>
                             <field name="is_minor" required="1"/>
                             <field name="guardian" invisible="not is_minor" required="is_minor"/>
@@ -42,10 +44,53 @@
         </field>
     </record>
 
+    <!-- view action' a search_view_id  eklenmeli Odoo 17 için gerekli-->
+    <record id="view_hospital_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="Patients">
+                <!--Çoklu Arama -->
+                <field name="name" string="Name | Description"
+                       filter_domain="['|',('name','ilike',self),('description','ilike',self)]"/> <!-- ilike: case sensitivity-->
+
+                <!--Tekli Arama -->
+                <field name="name"/>
+                <field name="description"/>
+                <field name="date_of_birth"/>
+                <field name="gender"/>
+                <field name="guardian"/>
+
+                <!--Default Filter için filtre hazırlama -->
+                <filter name="filter_default" string="Default Filter"
+                        domain="['|',('gender','=','female'),('gender','=','male')]"/>
+
+                <separator/> <!-- Ayraç ekleme ve ayrılan yerler birlikte seçilince or ile birleştirme yapmaz-->
+
+                <!--Filtreleme Çoklu seçim-->
+                <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+                <filter name="filter_female" string="Female" domain="[('gender','=','female')]"/>
+
+                <!--Group By Ekleme-->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                </group>
+                <!-- view görünümde sol taraf için search panel ekleme-->
+                <searchpanel>
+                    <field name="gender" string="Gender" select="multi" color="#32CD32" enable_counters="1"
+                           icon="fa-users"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
     <record id="action_hospital_patient" model="ir.actions.act_window">
         <field name="name">Patient</field>
         <field name="res_model">hospital.patient</field>
         <field name="view_mode">tree,form</field>
+        <!--Otomatik Filtre atamak (group veya filter)-->
+        <field name="context">{'search_default_filter_default':1}</field>
+        <field name="search_view_id" ref="view_hospital_patient_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new patient
