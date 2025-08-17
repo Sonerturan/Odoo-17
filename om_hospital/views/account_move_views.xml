@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_inherited" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- İnherit alınan form' a field ekleme -->
+            <xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="appointment_id"/>
+            </xpath>
+
+            <!-- Inherit alınan form dan Group ve Field bildirerek field kaldırma-->
+            <xpath expr="//group['accounting_info_group']/field[@name='auto_post']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherited" model="ir.ui.view">
+        <field name="name">account.move.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <!-- İnherit alınan view' a field ekleme -->
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="appointment_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
